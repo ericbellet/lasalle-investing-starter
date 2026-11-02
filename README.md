@@ -6,16 +6,54 @@ La plataforma del campeonato la mantiene el profesor. Quien quiera colaborar pue
 
 ## 1. Crea tu repositorio en GitHub
 
-1. Inicia sesión en GitHub y abre este repositorio.
-2. Pulsa **Use this template → Create a new repository**.
-3. Elige tu cuenta y un nombre, por ejemplo `mi-proyecto-inversion`.
-4. Clona tu copia. Sustituye `TU_USUARIO` por tu usuario real:
+Un **fork** es tu copia del proyecto del profesor dentro de GitHub. Primero creas esa copia en tu cuenta y después la descargas al ordenador con `git clone`.
+
+### A. Hacer el fork en tu cuenta
+
+1. Abre [GitHub](https://github.com) e inicia sesión con **Sign in**. Si todavía no tienes una cuenta personal, créala antes de continuar.
+2. Abre [ericbellet/lasalle-investing-starter](https://github.com/ericbellet/lasalle-investing-starter). Comprueba el propietario y el nombre para asegurarte de que estás en la base del alumnado.
+3. Busca **Fork** arriba a la derecha, junto a las notificaciones y las estrellas. Pulsa el botón. Si aparece un menú, elige **Create a new fork**.
+
+![Botón Fork señalado en el repositorio real de partida](docs/github-fork.png)
+
+4. En el formulario, elige estos valores:
+
+| Campo | Qué debes poner |
+|---|---|
+| **Owner** | Tu usuario personal de GitHub |
+| **Repository name** | `lasalle-investing-starter`; conserva el nombre para seguir los comandos del curso |
+| **Description** | Opcional; puedes mantener la que aparece |
+| **Copy the main branch only** | Mantén la casilla marcada para copiar la rama de trabajo inicial |
+
+5. Pulsa el botón verde **Create fork**, al final del formulario. Espera a que GitHub abra tu nuevo repositorio.
+6. Comprueba que el propietario que aparece arriba es **tu usuario**. Debajo del nombre verás **forked from ericbellet/lasalle-investing-starter**: esa referencia confirma el origen de la copia.
+
+**Resultado:** ya tienes tu repositorio en GitHub. Todavía no has descargado sus archivos al ordenador. Si GitHub indica que ya tienes un fork, abre esa copia desde tu cuenta y continúa con el apartado B.
+
+### B. Descargar tu fork al ordenador
+
+1. Entra en tu fork y pulsa **Code → Local → HTTPS**.
+2. Copia la URL completa con el botón de copiar. Comprueba que el propietario de la URL es tu usuario.
+3. Abre una terminal en la carpeta donde quieras guardar el trabajo. Escribe `git clone`, deja un espacio, pega la URL copiada y pulsa Intro. No escribas literalmente `TU_USUARIO`.
+4. Espera a que termine la descarga. Aparecerá la carpeta `lasalle-investing-starter`.
+5. Entra en ella y comprueba la conexión con GitHub:
 
 ```bash
-git clone https://github.com/TU_USUARIO/mi-proyecto-inversion.git
-cd mi-proyecto-inversion
+cd lasalle-investing-starter
+git remote -v
+```
+
+Las líneas de `origin` deben apuntar a tu fork, con tu usuario como propietario. Al terminar debes tener **el fork en GitHub y la carpeta del proyecto en tu ordenador**.
+
+### C. Instalar las dependencias
+
+Desde esa misma carpeta, ejecuta:
+
+```bash
 uv sync --locked --python 3.11
 ```
+
+Referencia: [documentación oficial de GitHub sobre forks](https://docs.github.com/en/pull-requests/how-tos/work-with-forks/fork-a-repo).
 
 ## 2. Arranca la API con los datos incluidos
 
@@ -25,9 +63,9 @@ uv run uvicorn app:app --reload
 
 Abre [las selecciones](http://127.0.0.1:8000/api/predictions), [el estado](http://127.0.0.1:8000/api/health) o [Swagger](http://127.0.0.1:8000/docs). La respuesta inicial ya contiene nueve selecciones: tres de `1W`, tres de `1M` y tres de `3M`. El nombre inicial es un ejemplo.
 
-## 3. Configura tu nombre y tus acciones
+## 3. Configura tu nombre, acciones y fondos
 
-Edita `config.toml`: escribe el nombre con el que te ha registrado el profesor y tu lista de tickers. Las diez acciones incluidas son ejemplos, no una lista obligatoria. Puedes investigar y añadir otras; necesitas datos suficientes de cada una antes de seleccionarla.
+Edita `config.toml`: escribe el nombre con el que te ha registrado el profesor y tu lista de tickers. **Puedes elegir acciones de cualquier país, fondos de inversión y ETF.** El snapshot inicial no limita tu universo. Comprueba el identificador, moneda e histórico de cada instrumento y que la plataforma pueda recuperar su cotización o valor liquidativo al resolver las selecciones. Necesitas al menos tres instrumentos distintos con datos suficientes.
 
 Con el universo inicial puedes publicar de inmediato:
 
@@ -45,7 +83,7 @@ Si añades una acción sin datos, el publicador lo indica y conserva la última 
 
 ```text
 lake/
-  raw/yahoo/<descarga>/AAPL.json
+  raw/yahoo/<descarga>/<TICKER>.json
   raw/yahoo/<descarga>/manifest.json
   clean/prices.csv
   curated/features.csv
@@ -95,7 +133,7 @@ Adapta las fechas al periodo que necesites. Este adaptador utiliza un acceso web
 
 ## 8. Opciones de almacenamiento
 
-Puedes completar RA1 con el lake en tu ordenador. Para almacenar objetos fuera del equipo, investiga Cloudflare R2, Supabase Storage, Amazon S3 o Azure Blob Storage/ADLS Gen2. Distingue cuota gratuita mensual de créditos temporales o de estudiante y revisa las condiciones de tu cuenta.
+**Puedes completar todos los requisitos obligatorios de RA1 con los ficheros en local. Se concederán puntos extra si guardas los datos en AWS S3, Azure Data Lake o un servicio similar** y demuestras escritura, lectura desde el ETL y recuperación. También puedes investigar Cloudflare R2 y Supabase Storage. Distingue cuota gratuita mensual de créditos temporales o de estudiante y revisa las condiciones de tu cuenta.
 
 Un bucket es un contenedor de ficheros. Puedes conservar prefijos `raw/`, `clean/` y `curated/`. Supabase Storage guarda ficheros; las tablas PostgreSQL corresponden al warehouse de RA2. No subas credenciales a GitHub.
 
